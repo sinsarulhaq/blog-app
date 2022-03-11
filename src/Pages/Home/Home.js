@@ -1,26 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Contents from "../../Components/Contents";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Header from "../../Components/Header";
+import db from "../../firebsae";
+import { getPostArticle } from "../../redux/actions";
+
 function Home() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user, article } = useSelector((state) => state.data);
+  useEffect(() => {
+    dispatch(getPostArticle())
+  });
+
   return (
     <Container>
+      {!user && navigate("/")}
+      {/* <Header /> */}
       <Image src="/images/blog-banner (1).jpg" />
-      <Content>
-        <Contents />
-        <Contents />
-        <Contents />
-        <Contents />
-        <Contents />
-        <Contents />
-        <Contents />
+      <Content> 
+        {article && article.map((post, index) => (
+           <Contents post={post} key={index} />
+        ))}
       </Content>
     </Container>
   );
 }
-
 export default Home;
 const Container = styled.div`
-/* position: absolute; */
+  /* position: absolute; */
   height: auto;
   width: 100%;
   display: flex;
@@ -32,16 +42,16 @@ const Image = styled.img`
   height: 300px;
   object-fit: cover;
   margin-bottom: 20px;
-  @media(max-width: 768px){
+  @media (max-width: 768px) {
     width: 100%;
     height: 250px;
   }
 `;
 const Content = styled.div`
-/* position: relative; */
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: space-evenly;
-flex-wrap: wrap;
-`
+  /* position: relative; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+`;

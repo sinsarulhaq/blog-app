@@ -1,21 +1,37 @@
-import React from "react";
+import React,{useEffect} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { LoginAPI } from "../../redux/actions";
 
 function Login() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.data);
+
+  useEffect(() => {
+    if(user){
+      navigate('/home')
+    }
+  }, [user, navigate])
+  
+  const handleSingIn = (e) => {
+    e.preventDefault();
+    dispatch(LoginAPI(user));
+  };
   return (
     <Container>
       <Content>
         <h1>Welcome Back!</h1>
         <h4>
-          Signin to get technology updations, blogs recommentaion, follow authors
-          and topics you love, and interact with blogs
+          Signin to get technology updations, blogs recommentaion, follow
+          authors and topics you love, and interact with blogs
         </h4>
-        <Button>
+        <Button onClick={handleSingIn}>
           <img src="/images/google.svg" alt="" />
           Login with google
         </Button>
         <ImagesRow>
-
           <img src="/images/react.png" alt="" />
           <img src="/images/vue.png" alt="" />
           <img src="/images/node.png" alt="" />
@@ -25,8 +41,8 @@ function Login() {
         <Privacy>
           Notice. PrivacyPolicies.com uses cookies to provide necessary website
           functionality, improve your experience and analyze our traffic. By
-          using our website, you agree to <a href="/">our Privacy Policy </a> and our cookies
-          usage.
+          using our website, you agree to <a href="/">our Privacy Policy </a>{" "}
+          and our cookies usage.
         </Privacy>
       </Content>
     </Container>
@@ -73,18 +89,17 @@ const Content = styled.div`
     text-align: center;
   }
   @media (max-width: 768px) {
-    h1{
+    h1 {
       width: 300px;
       text-align: center;
       font-size: 39px;
     }
-    h4{
+    h4 {
       width: 350px;
       font-size: 15px;
       text-align: start;
       padding-left: 20px;
     }
-    
   }
 `;
 const Button = styled.div`
@@ -102,38 +117,37 @@ const Button = styled.div`
   img {
     padding-right: 9px;
   }
-  &:hover{
+  &:hover {
     color: black;
     background-color: white;
-     transition-duration: 167ms;
-    
+    transition-duration: 167ms;
   }
 `;
 const Privacy = styled.div`
-margin-top: 10px;
-font-size: 12px;
-@media(max-width: 768px){
-  width: 350px;
-}
-`
-const ImagesRow = styled.div`
-display: flex;
-flex-direction: row;
-margin-top: 10px;
-margin-bottom: 10px;
-padding: 20px;
-transition-duration: 167ms;
-img{
-  width: 60px;
-  height: 60px;
-  &:hover{
-    padding-top: 15px;
+  margin-top: 10px;
+  font-size: 12px;
+  @media (max-width: 768px) {
+    width: 350px;
   }
-}
-@media(max-width: 768px){
- img{
-  width: 50px;
-  height: 50px;
- }
-}
-`
+`;
+const ImagesRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 20px;
+  transition-duration: 167ms;
+  img {
+    width: 60px;
+    height: 60px;
+    &:hover {
+      padding-top: 15px;
+    }
+  }
+  @media (max-width: 768px) {
+    img {
+      width: 50px;
+      height: 50px;
+    }
+  }
+`;
