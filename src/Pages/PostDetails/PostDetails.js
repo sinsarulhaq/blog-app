@@ -1,62 +1,46 @@
-import React from "react";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import db from "../../firebsae";
 
 function PostDetails() {
+  const [post, setPost] = useState('')
+  const [name, setName] = useState('')
+  const {id} = useParams()
+  console.log(id);
+  useEffect(() => {
+    db.collection("posts")
+      .doc(id)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log(doc.data());
+          console.log(doc.data().user);
+          setName(doc.data().user);
+          setPost(doc.data());
+        }
+      });
+  },[id])
   return (
     <>
       <Author>
         <img
-          src="https://media-exp1.licdn.com/dms/image/C4E03AQHfAoh15IzWSw/profile-displayphoto-shrink_400_400/0/1632934289029?e=1652313600&v=beta&t=gtLjlllFQZyd6NA0cPZZY6OVLwIxkVqqDvO-ZAsPW10"
+          src={name.photo}
           alt=""
         />
         <Name>
-          <span>sinsarul haq vm</span>
-          <span>23/09/2022</span>
+          <span>{name.name}</span>
+          <span>{moment.unix(name.time).format("MMMM DD , h:mma")}</span>
+          {/* <span>{name.time.toDate().toLocaleDateString()}</span> */}
+          {/* article.actor.date.toDate().toLocaleDateString() */}
         </Name>
       </Author>
       <Container>
         <Content>
-          <Title>This is One of the biggest movie in the shore</Title>
-          <Image src="/images/blog.jpg" />
-          <Body>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis ut
-            earum error, natus ea ipsa ipsum in eum nesciunt porro? Totam
-            dignissimos itaque beatae. Fugiat ea ad eveniet hic esse?Lorem ipsum
-            dolor sit amet, consectetur adipisicing elit. Omnis ut earum error,
-            natus ea ipsa ipsum in eum nesciunt porro? Totam dignissimos itaque
-            beatae. Fugiat ea ad eveniet hic esse?Lorem ipsum dolor sit amet,
-            consectetur adipisicing elit. Omnis ut earum error, natus ea ipsa
-            ipsum in eum nesciunt porro? Totam dignissimos itaque beatae. Fugiat
-            ea ad eveniet hic esse?Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Omnis ut earum error, natus ea ipsa ipsum in eum
-            nesciunt porro? Totam dignissimos itaque beatae. Fugiat ea ad
-            eveniet hic esse?LorLorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Omnis ut earum error, natus ea ipsa ipsum in eum
-            nesciunt porro? Totam dignissimos itaque beatae. Fugiat ea ad
-            eveniet hic esse?Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit. Omnis ut earum error, natus ea ipsa ipsum in eum nesciunt
-            porro? Totam dignissimos itaque beatae. Fugiat ea ad eveniet hic
-            esse?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis
-            ut earum error, natus ea ipsa ipsum in eum nesciunt porro? Totam
-            dignissimos itaque beatae. Fugiat ea ad eveniet hic esse?Lorem ipsum
-            dolor sit amet, consectetur adipisicing elit. Omnis ut earum error,
-            natus ea ipsa ipsum in eum nesciunt porro? Totam dignissimos itaque
-            beatae. Fugiat ea ad eveniet hic esse?Lor Lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. Omnis ut earum error, natus ea
-            ipsa ipsum in eum nesciunt porro? Totam dignissimos itaque beatae.
-            Fugiat ea ad eveniet hic esse?Lorem ipsum dolor sit amet,
-            consectetur adipisicing elit. Omnis ut earum error, natus ea ipsa
-            ipsum in eum nesciunt porro? Totam dignissimos itaque beatae. Fugiat
-            ea ad eveniet hic esse?Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Omnis ut earum error, natus ea ipsa ipsum in eum
-            nesciunt porro? Totam dignissimos itaque beatae. Fugiat ea ad
-            eveniet hic esse?Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit. Omnis ut earum error, natus ea ipsa ipsum in eum nesciunt
-            porro? Totam dignissimos itaque beatae. Fugiat ea ad eveniet hic
-            esse?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis
-            ut earum error, natus ea ipsa ipsum in eum nesciunt porro? Totam
-            dignissimos itaque beatae. Fugiat ea ad eveniet hic esse?
-          </Body>
+          <Title>{post.title}</Title>
+          <Image src={post.image} />
+          <Body>{post.body}</Body>
         </Content>
       </Container>
     </>
@@ -119,11 +103,12 @@ const Title = styled.h2`
 const Image = styled.img`
   width: 100%;
   height: 400px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 5px;
   @media(max-width: 768px) {
     width: 100%;
     height: 250px;
+    object-fit: contain;
   }
 `;
 const Body = styled.h4`

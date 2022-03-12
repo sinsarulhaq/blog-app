@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { postArticle } from "../../redux/actions";
+import Header from "../../Components/Header";
 import firebase from "firebase";
 function Post() {
   const navigate = useNavigate();
@@ -12,6 +13,8 @@ function Post() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [image, setImage] = useState("");
+
+  const nothing = title === '' || body === '' || image === null
 
   const handleChange = (e) => {
     const image = e.target.files[0];
@@ -30,7 +33,7 @@ function Post() {
       user: user,
       timestamp: firebase.firestore.Timestamp.now(),
     };
-    dispatch(postArticle(payload));
+    dispatch(postArticle(payload))
     setImage("");
     setBody("");
     setTitle("");
@@ -38,6 +41,8 @@ function Post() {
   };
 
   return (
+    <>
+    <Header />
     <Container>
       <Image src="/images/ban.jpg" />
       <SelectImage>
@@ -62,6 +67,7 @@ function Post() {
         />
         <label htmlFor="file">
           <AddCircleOutlineOutlinedIcon sx={{ fontSize: 40 }} />
+          image
         </label>
       </SelectImage>
       <Fields>
@@ -72,9 +78,10 @@ function Post() {
           onChange={(e) => setBody(e.target.value)}
           required
         ></textarea>
-        <button onClick={handleSubmit}>POST</button>
+        <button onClick={handleSubmit} disabled={nothing  ? true : false}>POST</button>
       </Fields>
     </Container>
+    </>
   );
 }
 
@@ -157,6 +164,12 @@ const SelectImage = styled.div`
     font-size: 30px;
     border-radius: 5px;
     margin-right: 40px;
+  }
+  label{
+    line-height: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   @media (max-width: 768px) {
     width: 100%;

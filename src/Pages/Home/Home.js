@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Contents from "../../Components/Contents";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../../Components/Header";
 import db from "../../firebsae";
 import { getPostArticle } from "../../redux/actions";
@@ -18,8 +18,9 @@ function Home() {
   return (
     <Container>
       {!user && navigate("/")}
-      {/* <Header /> */}
+      <Header />
       <Image src="/images/blog-banner (1).jpg" />
+      <Button><Link to={'/post'} className='link' >Create a post</Link></Button>
       <Content> 
         {article && article.map((post, index) => (
            <Contents post={post} key={index} />
@@ -47,6 +48,27 @@ const Image = styled.img`
     height: 250px;
   }
 `;
+
+const Button = styled.div`
+background-color: #0185d8;
+width: 140px;
+padding: 15px;
+margin: 20px;
+border-radius: 28px;
+display: flex;
+align-items: center;
+justify-content: center;
+.link{
+  text-decoration: none;
+  color: #fff;
+  
+}
+@media(max-width: 768px){
+  margin-left: 20px;
+  margin-bottom: 0;
+}
+`
+
 const Content = styled.div`
   /* position: relative; */
   display: flex;

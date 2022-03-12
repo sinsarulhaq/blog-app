@@ -6,6 +6,11 @@ const setUser = (user) => ({
   payload: user,
 });
 
+export const setLoading = (status) => ({
+  type: types.SET_LOADING,
+  payload: status,
+});
+
 const getArticle = (article) => ({
   type: types.GET_ARTICLE,
   payload: article,
@@ -15,6 +20,14 @@ export const LoginAPI = () => {
   return (dispatch) => {
     auth.signInWithPopup(provider).then((payload) => {
       dispatch(setUser(payload.user));
+    });
+  };
+};
+
+export const LogoutAPI = () => {
+  return (dispatch) => {
+    auth.signOut().then(() => {
+      dispatch(setUser(null));
     });
   };
 };
@@ -31,6 +44,7 @@ export const getAuthUser = () => {
 
 export const postArticle = (payload) => {
   return (dispatch) => {
+    dispatch(setLoading(true));
     const upload = storage
       .ref(`images/${payload.image.name}`)
       .put(payload.image);
@@ -58,17 +72,20 @@ export const postArticle = (payload) => {
           title: payload.title,
           body: payload.body,
         });
+        dispatch(setLoading(false));
       }
     );
   };
 };
 
 export const getPostArticle = () => {
-    return (dispatch) => {
-        db.collection("posts").onSnapshot((snapshot) => {
-            const article = snapshot.docs.map((doc) => doc.data())
-            // console.log(article);
-            dispatch(getArticle(article))
-        })
-    }
-}
+  return (dispatch) => {
+    db.collection("posts").onSnapshot((snapshot) => {
+      const article = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      dispatch(getArticle(article));
+    });
+  };
+};
