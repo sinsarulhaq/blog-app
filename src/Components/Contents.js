@@ -3,16 +3,19 @@ import { now } from "moment";
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { setLoading } from "../redux/actions";
 
 function Contents({post}) {
  
   return (
+    <>
     <Container>
       <Image src={post.image} />
       <Link to={`/postdetails/${post.id}`} className='link'>
       <Body>{post.body}</Body>
       </Link>
     </Container>
+    </>
   );
 }
 

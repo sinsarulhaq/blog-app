@@ -2,6 +2,7 @@ import * as types from "./actionType";
 
 const initialState = {
   article: [],
+  loading: false,
   user: null,
 };
 
@@ -17,6 +18,11 @@ const allReducer = (state = initialState, action) => {
         ...state,
         article: action.payload,
       };
+      case types.SET_LOADING:
+        return{
+          ...state,
+          loading: action.payload
+        }
     default:
       return state;
   }
